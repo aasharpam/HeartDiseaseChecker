@@ -2,7 +2,7 @@
 
 Author: **Aashar Pamidiparti**
 
-A hobby and school project that turns a logistic regression model into a mobile-friendly screening form. You enter clinical indicators from `heart.csv`, the app validates them, and a saved classifier estimates the chance of a heart-disease signal.
+A hobby project that turns a logistic regression model into a mobile-friendly screening form. You enter clinical indicators from `heart.csv`, the app validates them, and a saved classifier estimates the chance of a heart-disease signal.
 
 This tool is for educational and experimental use only. It is not a diagnosis, medical advice, or a substitute for professional care.
 
