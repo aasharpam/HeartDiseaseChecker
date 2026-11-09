@@ -1,1 +1,5 @@
 *.html linguist-detectable=false
+*.css linguist-detectable=false
+*.md linguist-detectable=false
+*.csv linguist-detectable=false
+*.local linguist-detectable=false
