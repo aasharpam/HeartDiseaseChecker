@@ -1,1 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#9b2335" />
+  <title>PulseCheck · Heart Risk Screening</title>
+  <link rel="icon" type="image/png" href="{{ url_for('project_image', filename='Favicon/aasharpamhrtfavicon.png') }}" />
+  <link rel="apple-touch-icon" href="{{ url_for('project_image', filename='Favicon/aasharpamhrtfavicon.png') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <header class="topbar">
+    <div class="brand">
+      <span class="pulse-mark" aria-hidden="true"></span>
+      <div>
+        <p class="brand-kicker">Clinical screening</p>
+        <h1>PulseCheck</h1>
+      </div>
+    </div>
+    <div class="header-actions">
+      <label class="theme-slider" for="themeRange">
+        <span class="theme-icon" aria-hidden="true">☀</span>
+        <input id="themeRange" type="range" min="0" max="1" step="1" value="0" aria-label="Toggle dark and light theme" />
+        <span class="theme-icon" aria-hidden="true">☾</span>
+      </label>
+      <button type="button" class="about-btn" id="aboutBtn" aria-haspopup="dialog">About</button>
+    </div>
+  </header>
 
+  <main class="shell">
+    <section class="intro">
+      <h2>Estimate heart-disease likelihood from a 12-point profile.</h2>
+      <p>Enter vitals and ECG findings. Max heart rate is filled as <strong>220 − age</strong> and can be adjusted slightly if you have a measured value.</p>
+    </section>
+
+    <form id="heartForm" novalidate>
+      <div class="form-grid">
+        <fieldset class="card span-2">
+          <legend>Patient</legend>
+          <div class="row">
+            <div class="field">
+              <label for="age">Age</label>
+              <input id="age" name="Age" type="number" inputmode="numeric" min="18" max="100" required placeholder="e.g. 54" />
+              <small class="hint">18–100 years</small>
+              <p class="error" data-error-for="Age"></p>
+            </div>
+            <div class="field">
+              <label for="sex">Sex</label>
+              <select id="sex" name="Sex" required>
+                <option value="" disabled selected>Select</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+              </select>
+              <p class="error" data-error-for="Sex"></p>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="card span-2">
+          <legend>Chest pain type</legend>
+          <div class="chip-group" role="radiogroup" aria-label="Chest pain type">
+            <label class="chip"><input type="radio" name="ChestPainType" value="ATA" required /><span>ATA</span><em>Atypical angina</em></label>
+            <label class="chip"><input type="radio" name="ChestPainType" value="NAP" /><span>NAP</span><em>Non-anginal</em></label>
+            <label class="chip"><input type="radio" name="ChestPainType" value="ASY" /><span>ASY</span><em>Asymptomatic</em></label>
+            <label class="chip"><input type="radio" name="ChestPainType" value="TA" /><span>TA</span><em>Typical angina</em></label>
+          </div>
+          <p class="error" data-error-for="ChestPainType"></p>
+        </fieldset>
+
+        <fieldset class="card">
+          <legend>Circulation</legend>
+          <div class="field">
+            <label for="restingBp">Resting blood pressure</label>
+            <div class="with-unit">
+              <input id="restingBp" name="RestingBP" type="number" inputmode="numeric" min="80" max="200" required placeholder="120" />
+              <span>mmHg</span>
+            </div>
+            <small class="hint">80–200 mmHg</small>
+            <p class="error" data-error-for="RestingBP"></p>
+          </div>
+          <div class="field">
+            <label for="cholesterol">Cholesterol</label>
+            <div class="with-unit">
+              <input id="cholesterol" name="Cholesterol" type="number" inputmode="numeric" min="50" max="600" required placeholder="200" />
+              <span>mg/dL</span>
+            </div>
+            <small class="hint">50–600 mg/dL</small>
+            <p class="error" data-error-for="Cholesterol"></p>
+          </div>
+        </fieldset>
+
+        <fieldset class="card">
+          <legend>Metabolic &amp; ECG</legend>
+          <div class="field">
+            <label for="fastingBs">FastingBS</label>
+            <select id="fastingBs" name="FastingBS" required>
+              <option value="" disabled selected>Select</option>
+              <option value="0">0 — below 120 mg/dL</option>
+              <option value="1">1 — 120 mg/dL or higher</option>
+            </select>
+            <p class="error" data-error-for="FastingBS"></p>
+          </div>
+          <div class="field">
+            <label for="restingEcg">RestingECG</label>
+            <select id="restingEcg" name="RestingECG" required>
+              <option value="" disabled selected>Select</option>
+              <option value="Normal">Normal</option>
+              <option value="ST">ST-T wave abnormality</option>
+              <option value="LVH">Left ventricular hypertrophy</option>
+            </select>
+            <p class="error" data-error-for="RestingECG"></p>
+          </div>
+        </fieldset>
+
+        <fieldset class="card">
+          <legend>Max heart rate</legend>
+          <div class="field">
+            <label for="maxHr">Max heart rate (220 − Age)</label>
+            <div class="with-unit">
+              <input id="maxHr" name="MaxHR" type="number" inputmode="numeric" min="60" max="220" required />
+              <span>bpm</span>
+            </div>
+            <small class="hint" id="maxHrHint">Enter age to auto-fill 220 − age</small>
+            <p class="error" data-error-for="MaxHR"></p>
+          </div>
+          <div class="field">
+            <label for="exerciseAngina">Exercise angina</label>
+            <select id="exerciseAngina" name="ExerciseAngina" required>
+              <option value="" disabled selected>Select</option>
+              <option value="N">No</option>
+              <option value="Y">Yes</option>
+            </select>
+            <p class="error" data-error-for="ExerciseAngina"></p>
+          </div>
+        </fieldset>
+
+        <fieldset class="card">
+          <legend>ST segment</legend>
+          <div class="field">
+            <label for="oldpeak">Oldpeak</label>
+            <input id="oldpeak" name="Oldpeak" type="number" inputmode="decimal" min="-3" max="7" step="0.1" required placeholder="0.0" />
+            <small class="hint">ST depression, −3.0 to 7.0</small>
+            <p class="error" data-error-for="Oldpeak"></p>
+          </div>
+          <div class="field">
+            <label for="stSlope">ST_Slope</label>
+            <select id="stSlope" name="ST_Slope" required>
+              <option value="" disabled selected>Select</option>
+              <option value="Up">Up</option>
+              <option value="Flat">Flat</option>
+              <option value="Down">Down</option>
+            </select>
+            <p class="error" data-error-for="ST_Slope"></p>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="actions">
+        <button type="submit" id="submitBtn">Run screening</button>
+        <button type="reset" class="ghost">Clear</button>
+      </div>
+    </form>
+
+    <aside id="result" class="result" hidden>
+      <p class="result-kicker">Model result</p>
+      <h3 id="resultTitle"></h3>
+      <div class="meter" aria-hidden="true"><span id="meterFill"></span></div>
+      <p id="resultCopy"></p>
+    </aside>
+  </main>
+
+  <footer class="footnote">
+    Educational screening only — not a diagnosis. Based on a logistic regression model trained on the project heart dataset.
+  </footer>
+
+  <div id="aboutModal" class="about-modal" hidden>
+    <div class="about-backdrop" data-about-close></div>
+    <div class="about-panel" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+      <button type="button" class="about-close" data-about-close aria-label="Close about">×</button>
+      <p class="about-kicker">About</p>
+      <h2 id="aboutTitle">Heart Health Checker</h2>
+      <p>
+        Welcome to the Heart Health Checker! This application is a personal passion and hobby project developed by
+        <strong class="author-name">Aashar Pamidiparti</strong>
+        to explore the fascinating intersection of machine learning, data preprocessing, and healthcare analytics.
+      </p>
+      <p>
+        While exploring core ML workflows—ranging from data cleaning and feature engineering to model training and evaluation—this project serves as a hands-on sandbox to understand how predictive algorithms interpret clinical indicators. The goal is to build an intuitive, interactive tool that bridges foundational machine learning concepts with practical, real-world utility.
+      </p>
+      <p class="about-disclaimer">
+        Disclaimer: This tool is built strictly for educational, experimental, and hobbyist exploration. It is not intended to serve as a diagnostic tool, medical advice, or a substitute for professional healthcare evaluation.
+      </p>
+    </div>
+  </div>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
